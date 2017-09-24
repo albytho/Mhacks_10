@@ -1,7 +1,5 @@
-function graph(dates,prices,predicted_prices){
-  console.log("HELLO")
-  console.log("dates", dates);
-  var ctx = document.getElementById("myChart");
+function graph(dates,prices,predicted_prices, chartID){
+  var ctx = document.getElementById(chartID);
   var myChart = new Chart(ctx, {
     type: 'line',
     data: {

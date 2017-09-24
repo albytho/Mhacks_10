@@ -1,37 +1,55 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>StockTracker</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title>ML Stocks</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
   <body>
-    <div class="container">
-      <div class="page-header">
-        <h1>StockTracker</h1>
-      </div>
-    </div>
     <div class="wrapper">
-      <h1>Bitcoin price over time</h1>
-      <h2>Price of a bitcion over the last 200 days</h2>
+      <h1>ML Stock Predictor</h1>
+      <h4>Price of a stock over the last 200 days</h4>
+      <br>
 
+      <p>(Seperate by commas)</p>
+      <form method="POST" action="/send">
+        <div class="form-group">
+          <input type="text" name="list_of_stocks">
+        </div>
+        <input class="btn btn-primary" type="submit" value="submit">
+      </form>
+      <br>
+      <br>
+      <br>
 
-      <p>{{dates}}</p>
-      <!--
-      <canvas id="myChart" width="1600" height="900">
-      </canvas>
+      {% for i in range(0,dates|length) %}
+        <p>{{stock_names[loop.index-1]}}</p>
+        <p style="color: {{'red' if (results[loop.index-1] - predicted_prices[loop.index-1]|last) < 0 else 'green'}}">Next Change: {{results[loop.index-1] - predicted_prices[loop.index-1]|last}}</p>
+        <p style="color: {{'red' if stock_sentiment[loop.index-1] < 0 else 'green'}}">Twitter Sentiment:  {{stock_sentiment[loop.index-1]}}</p>
+        <canvas id="myChart{{i}}" width="1600" height="900">
+        </canvas>
+        <br>
+        <br>
+      {% endfor %}
+
       <script src="../static/script.js" ></script>
+
       <script type="text/javascript">
-        graph({{dates}},{{prices}},{{predicted_prices}})
+        dates = {{dates}}
+        prices = {{prices}}
+        predicted_prices = {{predicted_prices}}
+
+        {% for date in dates%}
+          graph({{date}}, {{prices[loop.index-1]}}, {{predicted_prices[loop.index-1]}},"myChart{{loop.index-1}}")
+        {% endfor %}
       </script>
-      //-->
+
     </div>
 
-    
-
-   
-
+    <footer id="page-footer">
+      <p>Made with ❤ by Alby T. & Sameer S.<p>
+    </footer>
 
   </body>
 </html>
